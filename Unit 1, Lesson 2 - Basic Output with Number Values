@@ -1,0 +1,16 @@
+class Testing {
+  public static void main(String [] args) {
+    // place your code here!
+      import java.lang.Math; // import the math library
+
+     double circ; // declaration for circumference
+     double rad = 0.5; // the radius
+
+    // Calculate the circumference using the formula
+    circ = 2 * Math.PI * rad; // the circumference
+
+    // Print the result
+    System.out.println("The circumference of a circle of radius " + rad + " is " + circ);
+    // your code ends here!
+  }
+}
