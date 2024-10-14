@@ -1,0 +1,18 @@
+public class KoalaParty {
+    public static void main(String[] args) {
+        // Task A: Display Sanjay's party message
+        System.out.println("Welcome to Sanjay's Koala Party!");
+        System.out.print("It's possible Sanjay can distribute " + 12);
+        System.out.println(" cookies for each bowl.");
+        
+        // Task B: Sanjay has 6 bowls for 144 cookies
+        System.out.println("Sanjay has " + 6 + " bowls for " + 144 + " cookies.");
+        
+        // Task C: Calculate and display the number of cookies per bowl
+        System.out.println("The number of cookies per bowl is: " + (144 / 6));
+        
+        // Additional Example: Text and numbers
+        System.out.println("There are " + 28 + " people in this room.");
+        System.out.println("Your total money spent is: " + (2.75 + 9.32 + 11.91));
+    }
+}
