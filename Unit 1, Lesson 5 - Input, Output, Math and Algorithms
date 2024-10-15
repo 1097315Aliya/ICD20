@@ -35,7 +35,7 @@ public class UserBirthYearCalculation {
         System.out.println("The result is: " + result);
         System.out.println("This represents your birth year!");
         
-        // Close the scanner object
+        
         scanner.close();
     }
 }
