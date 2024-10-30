@@ -1,0 +1,16 @@
+import java.util.Scanner;
+
+class Main {
+  public static void main(String[] args) {
+    Scanner kbd = new Scanner(System.in);
+    String greeting;
+
+    System.out.print("Hi. Please enter a greeting in one word: ");
+    greeting = kbd.nextLine();
+    String oneWordGreeting = greeting.split(" ")[0];
+    System.out.printf("You said: %s.\n", oneWordGreeting);
+    System.out.print("Hi. Please enter a greeting in more than one word: ");
+    greeting = kbd.nextLine();
+    System.out.printf("You said: %s.\n", greeting);
+  }
+}
