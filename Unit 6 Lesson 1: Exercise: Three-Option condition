@@ -1,22 +1,24 @@
 import java.util.Scanner;
 
-class Main {
- public static void main(String[] args) {
-   Scanner sc = new Scanner(System.in);
-   System.out.print("Please enter an integer: ");
-   int number = sc.nextInt();
-
-   if (number >= 1000) {
-     System.out.println(number + " has 4 or more digits.");
-   } 
-   else if (number >= 100) {
-     System.out.println(number + " has 3 digits.");
-   } 
-   else if (number >= 10) {
-     System.out.println(number + " has 2 digits.");
-   } 
-   else {
-     System.out.println(number + " has 1 digit.");
-   }
- }
+public class Main {
+    public static void main(String[] args) {
+        // Create a Scanner object to read user input
+        Scanner scanner = new Scanner(System.in);
+        
+        // Prompt the user to enter the probability of precipitation
+        System.out.print("Please enter the probability of precipitation (0 to 1): ");
+        double precipitationProb = scanner.nextDouble();
+        
+        // Determine the weather forecast based on the entered probability
+        if (precipitationProb < 0.07) {
+            System.out.println("The forecast is dry weather.");
+        } else if (precipitationProb > 0.60) {
+            System.out.println("The forecast is rain.");
+        } else {
+            System.out.println("The forecast is a small chance of rain.");
+        }
+        
+        // Close the scanner to prevent resource leakage
+        scanner.close();
+    }
 }
