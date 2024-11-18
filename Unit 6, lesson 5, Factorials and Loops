@@ -1,0 +1,19 @@
+import java.util.Scanner;
+
+public class FactorialCalculator {
+     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter a positive number: ");
+        int num = scanner.nextInt();
+        
+        int fac = 1;
+        for (int i = 1; i <= num; i++) {
+            fac *= i;  
+        }
+        
+        System.out.println(num + "! = " + fac);
+        
+        scanner.close();
+    }
+}
