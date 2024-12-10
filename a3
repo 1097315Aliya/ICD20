@@ -1,0 +1,94 @@
+import java.util.Scanner;
+
+public class RockPaperScissors {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Ask the player how many games they want to play
+        System.out.print("How many games would you like to play? ");
+        int numGames = scanner.nextInt();
+        
+        // Variables to track wins, losses, and ties
+        int playerWins = 0;
+        int computerWins = 0;
+        int ties = 0;
+
+        // Loop to play multiple games
+        for (int i = 0; i < numGames; i++) {
+            // Ask the user for their choice
+            System.out.print("Enter your choice (r = rock, p = paper, s = scissors): ");
+            char playerChoice = scanner.next().toLowerCase().charAt(0); // Convert to lowercase to handle both upper and lowercase input
+            
+            // Ensure input is valid
+            if (playerChoice != 'r' && playerChoice != 'p' && playerChoice != 's') {
+                System.out.println("Invalid choice. Please enter 'r', 'p', or 's'.");
+                i--; // Retry this game if the input is invalid
+                continue;
+            }
+
+            // Computer randomly chooses 0, 1, or 2
+            int computerRandomChoice = (int)(3 * Math.random());
+            char computerChoice = ' ';
+            
+            // Map the random choice to 'r', 'p', or 's'
+            if (computerRandomChoice == 0) {
+                computerChoice = 'r'; // Rock
+            } else if (computerRandomChoice == 1) {
+                computerChoice = 'p'; // Paper
+            } else {
+                computerChoice = 's'; // Scissors
+            }
+
+            // Output the computer's choice
+            System.out.println("Computer chose: " + computerChoice);
+
+            // Compare the player's choice with the computer's choice to decide the winner
+            if (playerChoice == computerChoice) {
+                System.out.println("It's a tie!");
+                ties++;
+            } else if ((playerChoice == 'r' && computerChoice == 's') || 
+                       (playerChoice == 'p' && computerChoice == 'r') || 
+                       (playerChoice == 's' && computerChoice == 'p')) {
+                System.out.println("You win!");
+                playerWins++;
+            } else {
+                System.out.println("Computer wins!");
+                computerWins++;
+            }
+        }
+
+        // Output the final score after all games
+        System.out.println("\nFinal Score:");
+        System.out.println("Player Wins: " + playerWins);
+        System.out.println("Computer Wins: " + computerWins);
+        System.out.println("Ties: " + ties);
+
+        // Close the scanner to prevent resource leak
+        scanner.close();
+    }
+}
+
+
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.print("How many games would you like to play? "); // ask the user the number of rounds they want 
+        int numGames = sc.nextInt();
+        
+    for (int n = 0; n < numGames; n++) { 
+         System.out.print("Select your move (r = rock; p = paper, and s` = scissors): ");
+          char playerchoice = sc.next().toLowerCase().charAt(0);
+        
+    if(playerchoice != 'r' &&  playerchoice != 's' && playerchoice != 'p' ){
+          System.out.println("Please enter (r = rock; p = paper, and s` = scissors)");
+         
+        }
+    }
+   }  
+}
