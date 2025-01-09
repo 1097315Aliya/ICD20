@@ -1,0 +1,103 @@
+import java.io.*;
+import java.util.*;
+
+public class CreditRiverCreditCardCompany {
+
+    public static void main(String[] args) {
+        // File to read the customer data
+        String fileName = "ledger.dat";
+        List<Customer> customers = new ArrayList<>();
+        
+        // Read the file and process each customer's information
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                String accountNumber = data[2]; // Account number (BXXXXX)
+                double startingBalance = Double.parseDouble(data[3]);
+                double purchase = Double.parseDouble(data[4]);
+                double payment = Double.parseDouble(data[5]);
+                
+                // Calculate the final balance
+                double finalBalance = calculateBalance(startingBalance, purchase, payment);
+                
+                // Add the customer to the list
+                customers.add(new Customer(accountNumber, finalBalance));
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        // Calculate required outputs
+        if (!customers.isEmpty()) {
+            // Calculate the average balance
+            double totalBalance = 0;
+            Customer highest = customers.get(0);
+            Customer lowest = customers.get(0);
+            
+            for (Customer customer : customers) {
+                totalBalance += customer.getFinalBalance();
+                if (customer.getFinalBalance() > highest.getFinalBalance()) {
+                    highest = customer;
+                }
+                if (customer.getFinalBalance() < lowest.getFinalBalance()) {
+                    lowest = customer;
+                }
+            }
+            
+            double averageBalance = totalBalance / customers.size();
+            
+            // Display the final balances for each customer
+            System.out.println("Account Number and Final Balance:");
+            for (Customer customer : customers) {
+                System.out.printf("%s: $%.2f\n", customer.getAccountNumber(), customer.getFinalBalance());
+            }
+            
+            // Display the highest and lowest final balances
+            System.out.printf("\nHighest Balance: %s with $%.2f\n", highest.getAccountNumber(), highest.getFinalBalance());
+            System.out.printf("Lowest Balance: %s with $%.2f\n", lowest.getAccountNumber(), lowest.getFinalBalance());
+            
+            // Display the average balance
+            System.out.printf("\nAverage Balance: $%.2f\n", averageBalance);
+        }
+    }
+
+    // Function to calculate the final balance for a given customer
+    public static double calculateBalance(double startingBalance, double purchase, double payment) {
+        return startingBalance + purchase - payment;
+    }
+}
+
+// Customer class to store the account number and final balance
+class Customer {
+    private String accountNumber;
+    private double finalBalance;
+
+    public Customer(String accountNumber, double finalBalance) {
+        this.accountNumber = accountNumber;
+        this.finalBalance = finalBalance;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public double getFinalBalance() {
+        return finalBalance;
+    }
+}
+
+
+
+
+import java.util.Scanner;
+import java.io.*;
+public class Main { 
+    public static void main(String[] args) {
+        
+        //read customer data
+        String data = "ledger.dat";
+        List<Customer> customers = new ArrayList<>();
+        
+    }
+}
