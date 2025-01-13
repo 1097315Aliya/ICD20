@@ -1,21 +1,6 @@
-To focus strictly on the code as mentioned in the presentation, we will follow the specific requirements provided:
+If the goal is to avoid using `BufferedReader`, we can use `Scanner` instead. This allows us to read the file line by line in a simpler way. Here's how to rewrite the solution using `Scanner` instead of `BufferedReader`.
 
-### Requirements:
-
-1. **Read data from the `ledger.dat` file**.
-2. **Calculate the final balance using the formula**:
-   \[
-   \text{final balance} = \text{old balance} + \text{purchase} - \text{payment} + \text{interest}
-   \]
-   where the interest is \( \frac{0.28}{12} \times \text{old balance} \).
-3. **Output all account numbers with their final balances**.
-4. **Find and display the highest and lowest final balances**.
-5. **Calculate and display the average balance**.
-6. Use only functions and code as described in the presentation.
-
-Here is the code using only the requested methods and format.
-
-### Full Example Code:
+### Full Example Code Using `Scanner`:
 
 ```java
 import java.io.*;
@@ -23,11 +8,18 @@ import java.util.*;
 
 public class CreditRiverCreditCard {
 
-    public static void main(String[] args) throws IOException {
-        // Read the ledger.dat file
-        BufferedReader reader = new BufferedReader(new FileReader("ledger.dat"));
-        
-        String line;
+   Certainly! To include proper exception handling, we can wrap the file reading and parsing logic in a `try` block, and catch any potential exceptions such as `FileNotFoundException` or `IOException` using a `catch` block.
+
+### Full Example Code Using `Scanner` with `try-catch`:
+
+```java
+import java.io.*;
+import java.util.*;
+
+public class CreditRiverCreditCard {
+
+    public static void main(String[] args) {
+        // Initialize variables to track the necessary information
         int customerCount = 0;
         double totalBalance = 0;
         double maxBalance = Double.MIN_VALUE;
@@ -35,47 +27,66 @@ public class CreditRiverCreditCard {
         String maxAccount = "";
         String minAccount = "";
 
-        // Process each line from the file
-        while ((line = reader.readLine()) != null) {
-            // Split the line by commas
-            String[] data = line.split(",");
-            
-            // Extract customer data
-            String accountNumber = data[2].trim();
-            double startingBalance = Double.parseDouble(data[3].trim());
-            double purchase = Double.parseDouble(data[4].trim());
-            double payment = Double.parseDouble(data[5].trim());
-            
-            // Calculate the final balance using the function
-            double finalBalance = finalBalance(startingBalance, purchase, payment);
-            
-            // Output account number and final balance
-            System.out.println(accountNumber + ", " + finalBalance);
-            
-            // Track the max and min balances
-            if (finalBalance > maxBalance) {
-                maxBalance = finalBalance;
-                maxAccount = accountNumber;
+        // Wrap the file reading logic in a try-catch block
+        try {
+            // Open the ledger.dat file using Scanner
+            Scanner scanner = new Scanner(new File("ledger.dat"));
+
+            // Process each line from the file
+            while (scanner.hasNextLine()) {
+                // Read a single line from the file
+                String line = scanner.nextLine();
+                
+                // Split the line by commas
+                String[] data = line.split(",");
+                
+                // Extract customer data
+                String accountNumber = data[2].trim();
+                double startingBalance = Double.parseDouble(data[3].trim());
+                double purchase = Double.parseDouble(data[4].trim());
+                double payment = Double.parseDouble(data[5].trim());
+                
+                // Calculate the final balance using the function
+                double finalBalance = finalBalance(startingBalance, purchase, payment);
+                
+                // Output account number and final balance
+                System.out.println(accountNumber + ", " + finalBalance);
+                
+                // Track the max and min balances
+                if (finalBalance > maxBalance) {
+                    maxBalance = finalBalance;
+                    maxAccount = accountNumber;
+                }
+                if (finalBalance < minBalance) {
+                    minBalance = finalBalance;
+                    minAccount = accountNumber;
+                }
+                
+                // Accumulate the total balance for average calculation
+                totalBalance += finalBalance;
+                customerCount++;
             }
-            if (finalBalance < minBalance) {
-                minBalance = finalBalance;
-                minAccount = accountNumber;
-            }
-            
-            // Accumulate the total balance for average calculation
-            totalBalance += finalBalance;
-            customerCount++;
+
+            // Close the scanner
+            scanner.close();
+
+            // Calculate the average balance
+            double averageBalance = totalBalance / customerCount;
+
+            // Output results
+            System.out.println("\nAccount with highest final balance: " + maxAccount + ", " + maxBalance);
+            System.out.println("Account with lowest final balance: " + minAccount + ", " + minBalance);
+            System.out.println("Average final balance: " + averageBalance);
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: The file 'ledger.dat' was not found.");
+        } catch (IOException e) {
+            System.out.println("Error: There was an issue reading the file.");
+        } catch (NumberFormatException e) {
+            System.out.println("Error: There was an issue with the format of the numbers in the file.");
+        } catch (Exception e) {
+            System.out.println("An unexpected error occurred: " + e.getMessage());
         }
-
-        // Calculate the average balance
-        double averageBalance = totalBalance / customerCount;
-
-        // Output results
-        System.out.println("\nAccount with highest final balance: " + maxAccount + ", " + maxBalance);
-        System.out.println("Account with lowest final balance: " + minAccount + ", " + minBalance);
-        System.out.println("Average final balance: " + averageBalance);
-
-        reader.close(); // Close the file
     }
 
     // Function to calculate the final balance using the formula
@@ -88,28 +99,18 @@ public class CreditRiverCreditCard {
 }
 ```
 
-### Explanation of Code:
+### Explanation of `try-catch` Blocks:
+1. **`try` Block:**
+   - This block contains the code that may throw an exception. In our case, it is the file reading logic and processing of the data.
+   - We try to open the file, process each line, split it, and compute the balances.
 
-1. **Reading the file:**
-   - We use `BufferedReader` to read each line from the `ledger.dat` file.
-   - Each line is split into an array of strings by commas (`,`), which represent different data points: account number, starting balance, purchase, and payment.
+2. **`catch` Blocks:**
+   - **`FileNotFoundException`:** This exception is thrown if the file `ledger.dat` cannot be found. It provides a clear message to the user.
+   - **`IOException`:** This exception is caught if there are any general input/output issues while reading the file.
+   - **`NumberFormatException`:** This exception is thrown if there's an issue with parsing numbers (e.g., if a non-numeric value is found where a double is expected).
+   - **Generic `Exception`:** A general catch block is used for unexpected errors, ensuring that we can handle any unforeseen exceptions gracefully.
 
-2. **Calculating the final balance:**
-   - The function `finalBalance()` is called for each customer, which calculates the final balance using the formula:
-     \[
-     \text{final balance} = \text{old balance} + \text{purchase} - \text{payment} + \text{interest}
-     \]
-     where `interest` is computed as \( \text{old balance} \times \frac{0.28}{12} \).
-
-3. **Tracking highest, lowest balances, and average:**
-   - The program keeps track of the maximum and minimum balances along with their corresponding account numbers.
-   - The program also sums the final balances of all customers to calculate the average balance at the end.
-
-4. **Output:**
-   - For each customer, the account number and final balance are printed.
-   - After all records are processed, the program outputs the account number and balance of the highest and lowest final balances, as well as the average final balance.
-
-### Example Input in `ledger.dat`:
+### Example of Input in `ledger.dat`:
 ```
 Abrams,Raymond,B96747,67.19,22,61.9
 Johnson,Sarah,B12345,100.00,50,30.0
@@ -129,6 +130,8 @@ Account with lowest final balance: B96747, 67.19
 Average final balance: 110.34
 ```
 
-### Key Notes:
-- This solution strictly follows the presentation specifications, including function signatures and required outputs.
-- The file is assumed to be formatted correctly (with commas separating fields).
+### Benefits of `try-catch`:
+- **Robustness:** The program is more resilient and can handle potential issues, such as the file not existing or data format problems, gracefully without crashing.
+- **User Feedback:** The user is informed about specific issues like a missing file or format errors, making it easier to debug and fix the problem.
+  
+By incorporating `try-catch` blocks, we ensure that the program doesn't fail abruptly and provides helpful error messages when necessary.
