@@ -135,3 +135,54 @@ Average final balance: 110.34
 - **User Feedback:** The user is informed about specific issues like a missing file or format errors, making it easier to debug and fix the problem.
   
 By incorporating `try-catch` blocks, we ensure that the program doesn't fail abruptly and provides helpful error messages when necessary.
+
+
+
+
+
+
+import java.util.Scanner;
+import java.io.*;
+
+public class Main { 
+    public static void main(String[] args) {
+        
+        int customercount = 0;
+        double totalBalance = 0;
+        double maxBalance = Double.MIN_VALUE;
+        double minBalance = Double.MAX_VALUE;
+        String maxAccount = "";
+        String minAccount = "";
+        
+        try { 
+           Scanner sc = new Scanner(new File("ledger.dat"));
+          
+           while (sc.hasNextLine()) {
+               String line = sc.nextLine();
+               
+                String[] data = line.split(",");
+                String accountNum = data[2].trim();
+                double startingBalance = Double.parseDouble(data[3].trim());
+                double purchase = Double.parseDouble(data[4].trim());
+                double payment = Double.parseDouble(data[5].trim());
+                
+                
+                double finalBalance = finalBalance(startingBalance, purchase, payment);
+                
+                System.out.println(accountNum + ", " + finalBalance);
+                
+                if (finalBalance > maxBalance) {
+                    maxBalance = finalBalance;
+                    maxAccount = accountNum;
+                }
+                if (finalBalance < minBalance) {
+                    minBalance = finalBalance;
+                    minAccount = accountNum;
+                }
+                totalBalance += finalBalance;
+                customercount++;
+                }
+            sc.close();
+}
+    }
+}
