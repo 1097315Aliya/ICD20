@@ -1,188 +1,67 @@
-If the goal is to avoid using `BufferedReader`, we can use `Scanner` instead. This allows us to read the file line by line in a simpler way. Here's how to rewrite the solution using `Scanner` instead of `BufferedReader`.
+public static void main(String[] args) {
+    int customercount = 0;
+    double totalBalance = 0;
+    double maxBalance = Double.MIN_VALUE;
+    double minBalance = Double.MAX_VALUE;
+    String maxAccount = "";
+    String minAccount = "";
 
-### Full Example Code Using `Scanner`:
-
-```java
-import java.io.*;
-import java.util.*;
-
-public class CreditRiverCreditCard {
-
-   Certainly! To include proper exception handling, we can wrap the file reading and parsing logic in a `try` block, and catch any potential exceptions such as `FileNotFoundException` or `IOException` using a `catch` block.
-
-### Full Example Code Using `Scanner` with `try-catch`:
-
-```java
-import java.io.*;
-import java.util.*;
-
-public class CreditRiverCreditCard {
-
-    public static void main(String[] args) {
-        // Initialize variables to track the necessary information
-        int customerCount = 0;
-        double totalBalance = 0;
-        double maxBalance = Double.MIN_VALUE;
-        double minBalance = Double.MAX_VALUE;
-        String maxAccount = "";
-        String minAccount = "";
-
-        // Wrap the file reading logic in a try-catch block
-        try {
-            // Open the ledger.dat file using Scanner
-            Scanner scanner = new Scanner(new File("ledger.dat"));
-
-            // Process each line from the file
-            while (scanner.hasNextLine()) {
-                // Read a single line from the file
-                String line = scanner.nextLine();
-                
-                // Split the line by commas
-                String[] data = line.split(",");
-                
-                // Extract customer data
-                String accountNumber = data[2].trim();
-                double startingBalance = Double.parseDouble(data[3].trim());
-                double purchase = Double.parseDouble(data[4].trim());
-                double payment = Double.parseDouble(data[5].trim());
-                
-                // Calculate the final balance using the function
-                double finalBalance = finalBalance(startingBalance, purchase, payment);
-                
-                // Output account number and final balance
-                System.out.println(accountNumber + ", " + finalBalance);
-                
-                // Track the max and min balances
-                if (finalBalance > maxBalance) {
-                    maxBalance = finalBalance;
-                    maxAccount = accountNumber;
-                }
-                if (finalBalance < minBalance) {
-                    minBalance = finalBalance;
-                    minAccount = accountNumber;
-                }
-                
-                // Accumulate the total balance for average calculation
-                totalBalance += finalBalance;
-                customerCount++;
+    try { 
+        Scanner sc = new Scanner(new File("C:\\Users\\1097315\\Documents\\NetBeansProjects\\final_project\\src\\ledger.dat"));
+        
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            
+            // Skip empty lines
+            if (line.trim().isEmpty()) {
+                continue;
             }
-
-            // Close the scanner
-            scanner.close();
-
-            // Calculate the average balance
-            double averageBalance = totalBalance / customerCount;
-
-            // Output results
+            
+            String[] data = line.split(",");
+            
+            if (data.length < 6) {
+                System.out.println("Skipping invalid line: " + line);
+                continue; // Skip malformed lines
+            }
+            
+            String accountNumber = data[2].trim();
+            double startingBalance = Double.parseDouble(data[3].trim());
+            double purchase = Double.parseDouble(data[4].trim());
+            double payment = Double.parseDouble(data[5].trim());
+            
+            double finalBalance = finalBalance(startingBalance, purchase, payment);
+            
+            System.out.println(accountNumber + ", " + finalBalance);
+            
+            if (finalBalance > maxBalance) {
+                maxBalance = finalBalance;
+                maxAccount = accountNumber;
+            }
+            if (finalBalance < minBalance) {
+                minBalance = finalBalance;
+                minAccount = accountNumber;
+            }
+            totalBalance += finalBalance;
+            customercount++;
+        }
+        
+        sc.close();
+        
+        if (customercount > 0) {
+            double averageBalance = totalBalance / customercount;
             System.out.println("\nAccount with highest final balance: " + maxAccount + ", " + maxBalance);
             System.out.println("Account with lowest final balance: " + minAccount + ", " + minBalance);
             System.out.println("Average final balance: " + averageBalance);
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Error: The file 'ledger.dat' was not found.");
-        } catch (IOException e) {
-            System.out.println("Error: There was an issue reading the file.");
-        } catch (NumberFormatException e) {
-            System.out.println("Error: There was an issue with the format of the numbers in the file.");
-        } catch (Exception e) {
-            System.out.println("An unexpected error occurred: " + e.getMessage());
+        } else {
+            System.out.println("No valid data to process.");
         }
-    }
-
-    // Function to calculate the final balance using the formula
-    static double finalBalance(double oldBalance, double purchase, double payment) {
-        // Calculate interest
-        double interest = oldBalance * (0.28 / 12);
-        // Calculate the final balance
-        return oldBalance + purchase - payment + interest;
-    }
-}
-```
-
-### Explanation of `try-catch` Blocks:
-1. **`try` Block:**
-   - This block contains the code that may throw an exception. In our case, it is the file reading logic and processing of the data.
-   - We try to open the file, process each line, split it, and compute the balances.
-
-2. **`catch` Blocks:**
-   - **`FileNotFoundException`:** This exception is thrown if the file `ledger.dat` cannot be found. It provides a clear message to the user.
-   - **`IOException`:** This exception is caught if there are any general input/output issues while reading the file.
-   - **`NumberFormatException`:** This exception is thrown if there's an issue with parsing numbers (e.g., if a non-numeric value is found where a double is expected).
-   - **Generic `Exception`:** A general catch block is used for unexpected errors, ensuring that we can handle any unforeseen exceptions gracefully.
-
-### Example of Input in `ledger.dat`:
-```
-Abrams,Raymond,B96747,67.19,22,61.9
-Johnson,Sarah,B12345,100.00,50,30.0
-Taylor,John,B98765,200.00,75,25.0
-...
-```
-
-### Example Output:
-```
-B96747, 67.19
-B12345, 120.81
-B98765, 138.03
-...
-
-Account with highest final balance: B98765, 138.03
-Account with lowest final balance: B96747, 67.19
-Average final balance: 110.34
-```
-
-### Benefits of `try-catch`:
-- **Robustness:** The program is more resilient and can handle potential issues, such as the file not existing or data format problems, gracefully without crashing.
-- **User Feedback:** The user is informed about specific issues like a missing file or format errors, making it easier to debug and fix the problem.
-  
-By incorporating `try-catch` blocks, we ensure that the program doesn't fail abruptly and provides helpful error messages when necessary.
-
-
-
-
-
-
-import java.util.Scanner;
-import java.io.*;
-
-public class Main { 
-    public static void main(String[] args) {
         
-        int customercount = 0;
-        double totalBalance = 0;
-        double maxBalance = Double.MIN_VALUE;
-        double minBalance = Double.MAX_VALUE;
-        String maxAccount = "";
-        String minAccount = "";
-        
-        try { 
-           Scanner sc = new Scanner(new File("ledger.dat"));
-          
-           while (sc.hasNextLine()) {
-               String line = sc.nextLine();
-               
-                String[] data = line.split(",");
-                String accountNum = data[2].trim();
-                double startingBalance = Double.parseDouble(data[3].trim());
-                double purchase = Double.parseDouble(data[4].trim());
-                double payment = Double.parseDouble(data[5].trim());
-                
-                
-                double finalBalance = finalBalance(startingBalance, purchase, payment);
-                
-                System.out.println(accountNum + ", " + finalBalance);
-                
-                if (finalBalance > maxBalance) {
-                    maxBalance = finalBalance;
-                    maxAccount = accountNum;
-                }
-                if (finalBalance < minBalance) {
-                    minBalance = finalBalance;
-                    minAccount = accountNum;
-                }
-                totalBalance += finalBalance;
-                customercount++;
-                }
-            sc.close();
-}
-    }
+    } catch(FileNotFoundException e){
+        System.out.println("Error: The file 'ledger.dat' was not found.");
+    } catch (NumberFormatException e) {
+        System.out.println("Error: There was an issue with the format of the numbers in the file.");
+    } catch (Exception e) {
+        System.out.println("An unexpected error occurred: " + e.getMessage());
+        e.printStackTrace();
+    } 
 }
