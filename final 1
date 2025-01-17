@@ -1,0 +1,162 @@
+This Java program processes a file (likely called `ledger.dat`) containing financial data for multiple accounts, and it calculates the final balance for each account after applying purchases, payments, and interest. It also tracks the account with the highest and lowest balances, and computes the average final balance.
+
+Let's break down the code step by step:
+
+### **Imports**
+```java
+import java.util.Scanner;
+import java.io.*;
+```
+- `Scanner` is used for reading input, and `File` is used to represent the file that contains the ledger data.
+
+### **Main Class**
+```java
+public class Main {
+```
+The `Main` class encapsulates the entire program.
+
+### **`finalBalance` Method**
+```java
+static double finalBalance(double oldBalance, double purchase, double payment) {
+    double interest = oldBalance * (0.28 / 12); // Interest rate of 28% per year, divided by 12 for monthly
+    return oldBalance + purchase - payment + interest;
+}
+```
+- This method calculates the final balance for a given account.
+  - It first calculates the interest based on the old balance, assuming an annual interest rate of 28% (divided by 12 to get monthly interest).
+  - The final balance is computed by adding the purchase amount, subtracting the payment, and adding the interest.
+
+### **`main` Method**
+```java
+public static void main(String[] args) {
+```
+This is the entry point of the program.
+
+### **Initial Variables**
+```java
+int customercount = 0;
+double totalBalance = 0;
+double maxBalance = Double.MIN_VALUE;
+double minBalance = Double.MAX_VALUE;
+String maxAccount = "";
+String minAccount = "";
+```
+- `customercount`: Tracks the number of valid customer records processed.
+- `totalBalance`: Accumulates the sum of final balances for all accounts.
+- `maxBalance` and `minBalance`: Track the highest and lowest final balances, initialized to extreme values (`Double.MIN_VALUE` and `Double.MAX_VALUE` respectively).
+- `maxAccount` and `minAccount`: Store the account numbers of the accounts with the highest and lowest final balances.
+
+### **Reading and Processing the File**
+```java
+try {
+    Scanner sc = new Scanner(new File("C:\\Users\\1097315\\Documents\\NetBeansProjects\\final_project\\src\\ledger.dat"));
+```
+- The program opens a file located at a specific path (`ledger.dat`) and creates a `Scanner` object to read its contents.
+
+### **Loop Over Each Line in the File**
+```java
+while (sc.hasNextLine()) {
+    String line = sc.nextLine();
+```
+- The `while` loop reads each line in the file until the end.
+
+### **Empty Line Handling**
+```java
+if (line.trim().isEmpty()) {
+    // Skip empty lines
+}
+```
+- If the line is empty (i.e., it contains only spaces or is entirely blank), it is skipped.
+
+### **Splitting the Line into Data**
+```java
+String[] data = line.split("\\s+");
+```
+- The line is split into an array of strings (`data`), where each string corresponds to a space-separated value. This assumes that the file's data follows a format where:
+  - The first value is the account number.
+  - The second is the starting balance.
+  - The third is the purchase amount.
+  - The fourth is the payment amount.
+
+### **Skipping Invalid Lines**
+```java
+if (data.length != 4) {
+    System.out.println("Skipping invalid line: " + line);
+}
+```
+- If a line does not have exactly 4 values (which is the expected number), it is skipped with a message.
+
+### **Extracting and Parsing Values**
+```java
+String accountNumber = data[0].trim();
+double startingBalance = Double.parseDouble(data[1].trim());
+double purchase = Double.parseDouble(data[2].trim());
+double payment = Double.parseDouble(data[3].trim());
+```
+- The account number is extracted and trimmed of any extra spaces.
+- The starting balance, purchase amount, and payment amount are parsed as `double` values.
+
+### **Calculating the Final Balance**
+```java
+double finalBalance = finalBalance(startingBalance, purchase, payment);
+```
+- The `finalBalance` method is called to calculate the final balance for the account.
+
+### **Tracking Max, Min, and Total Balances**
+```java
+if (finalBalance > maxBalance) {
+    maxBalance = finalBalance;
+    maxAccount = accountNumber;
+}
+if (finalBalance < minBalance) {
+    minBalance = finalBalance;
+    minAccount = accountNumber;
+}
+totalBalance += finalBalance;
+customercount++;
+```
+- The program checks if the current final balance is greater than `maxBalance` or less than `minBalance` to update the highest and lowest balances and the corresponding account numbers.
+- It also adds the final balance to `totalBalance` and increments the `customercount` to keep track of how many accounts have been processed.
+
+### **Closing the File**
+```java
+sc.close();
+```
+- After processing all lines, the `Scanner` is closed to free up resources.
+
+### **Displaying the Results**
+```java
+if (customercount > 0) {
+    double averageBalance = totalBalance / customercount;
+    System.out.println("\nAccount with highest final balance: " + maxAccount + ", " + maxBalance);
+    System.out.println("Account with lowest final balance: " + minAccount + ", " + minBalance);
+    System.out.println("Average final balance: " + averageBalance);
+} else {
+    System.out.println("No valid data to process.");
+}
+```
+- If any valid accounts were processed (`customercount > 0`), the program calculates the average balance, prints the account with the highest and lowest final balances, and displays the average balance.
+- If no valid accounts were processed, it prints a message indicating there was no data to process.
+
+### **Exception Handling**
+```java
+} catch (FileNotFoundException e) {
+    System.out.println("Error: The file 'ledger.dat' was not found.");
+} catch (NumberFormatException e) {
+    System.out.println("Error: There was an issue with the format of the numbers in the file.");
+} catch (Exception e) {
+    System.out.println("An unexpected error occurred: " + e.getMessage());
+}
+```
+- The program handles different exceptions:
+  - `FileNotFoundException`: If the specified file cannot be found.
+  - `NumberFormatException`: If there is an issue with parsing numbers (for instance, the file contains non-numeric data).
+  - A generic `Exception` is caught for any other unexpected errors.
+
+### **Summary of Program Functionality**
+- Reads data from a file (`ledger.dat`) that contains information about multiple accounts (account number, starting balance, purchase, payment).
+- For each account, it calculates the final balance considering interest, purchases, and payments.
+- It tracks the account with the highest and lowest final balances and calculates the average final balance.
+- If an error occurs (file not found, invalid data), it prints an appropriate error message.
+
+Let me know if you need further clarifications!
